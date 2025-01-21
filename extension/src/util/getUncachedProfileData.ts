@@ -1,3 +1,4 @@
+import { AtpAgent } from "@atproto/api"
 import { ProfileData, Webfinger } from "./constants";
 import { getIsUrlHttpOrHttps } from "./getIsUrlHttpOrHttps";
 import { removeSubstring } from "./removeSubstring";
@@ -30,10 +31,8 @@ export async function getUncachedProfileData(
         throw new Error();
       }
 
-      const getProfileUrl = `https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=${actor}`
-
-      const getProfileResp = await fetch(getProfileUrl);
-      const profile = await getProfileResp.json()
+      const agent = new AtpAgent({ service: 'https://public.api.bsky.app' })
+      const profile = (await agent.getProfile({ actor })).data
 
       return {
         type: "profile",
